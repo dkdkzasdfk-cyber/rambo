@@ -1,996 +1,323 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="ar">
 <head>
-    <meta ct="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>رامبو - بوت ديسكورد</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>KLOZR Keyboard</title>
     <style>
-        :root {
-            --primary: #5865F2;
-            --primary-dark: #4752c4;
-            --secondary: #57F287;
-            --secondary-dark: #43b581;
-            --background: #0f0f1a;
-            --card-bg: #1a1b26;
-            --text: #ffffff;
-            --text-secondary: #b9bbbe;
-            --accent: #00b0f4;
-            --danger: #ed4245;
-            --success: #3ba55c;
-            --gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        }
-
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            user-select: none;
         }
-
         body {
-            background: var(--background);
-            color: var(--text);
+            background: linear-gradient(135deg, #0a0f1a 0%, #0f1520 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             min-height: 100vh;
-            overflow-x: hidden;
-            background-image: 
-                radial-gradient(circle at 10% 20%, rgba(88, 101, 242, 0.1) 0%, transparent 20%),
-                radial-gradient(circle at 90% 80%, rgba(87, 242, 135, 0.1) 0%, transparent 20%);
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-
-        /* الهيدر */
-        header {
-            text-align: center;
-            padding: 40px 0;
-            position: relative;
-        }
-
-        .logo {
-            font-size: 4rem;
-            margin-bottom: 20px;
-            background: var(--gradient);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            text-shadow: 0 0 30px rgba(102, 126, 234, 0.5);
-            animation: glow 3s infinite alternate;
-        }
-
-        @keyframes glow {
-            0% {
-                text-shadow: 0 0 20px rgba(102, 126, 234, 0.5);
-            }
-            100% {
-                text-shadow: 0 0 30px rgba(102, 126, 234, 0.8), 0 0 40px rgba(102, 126, 234, 0.6);
-            }
-        }
-
-        h1 {
-            font-size: 2.8rem;
-            margin-bottom: 10px;
-            background: linear-gradient(90deg, var(--primary), var(--accent));
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-        }
-
-        .subtitle {
-            font-size: 1.3rem;
-            color: var(--text-secondary);
-            margin-bottom: 30px;
-        }
-
-        .status {
-            display: inline-flex;
+            display: flex;
+            justify-content: center;
             align-items: center;
-            background: rgba(87, 242, 135, 0.15);
-            padding: 10px 20px;
-            border-radius: 25px;
-            margin-bottom: 30px;
-            border: 1px solid var(--secondary);
+            padding: 16px;
+        }
+        .app-container {
+            max-width: 500px;
+            width: 100%;
+            background: rgba(20, 25, 35, 0.95);
+            border-radius: 32px;
+            padding: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+            border: 1px solid rgba(68, 136, 255, 0.3);
             backdrop-filter: blur(10px);
         }
-
-        .status-dot {
-            width: 12px;
-            height: 12px;
-            background: var(--secondary);
-            border-radius: 50%;
-            margin-left: 10px;
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0% {
-                box-shadow: 0 0 0 0 rgba(87, 242, 135, 0.7);
-            }
-            70% {
-                box-shadow: 0 0 0 10px rgba(87, 242, 135, 0);
-            }
-            100% {
-                box-shadow: 0 0 0 0 rgba(87, 242, 135, 0);
-            }
-        }
-
-        /* القائمة الرئيسية */
-        .main-menu {
-            display: flex;
-            justify-content: center;
-            gap: 30px;
-            flex-wrap: wrap;
-            margin-top: 40px;
-        }
-
-        .menu-btn {
-            background: var(--card-bg);
-            border: none;
-            border-radius: 20px;
-            padding: 30px 25px;
-            width: 300px;
+        .logo {
             text-align: center;
-            cursor: pointer;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-            position: relative;
-            overflow: hidden;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .menu-btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 5px;
-            background: var(--gradient);
-        }
-
-        .menu-btn::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-            transition: left 0.5s;
-        }
-
-        .menu-btn:hover::after {
-            left: 100%;
-        }
-
-        .menu-btn:hover {
-            transform: translateY(-15px) scale(1.05);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
-        }
-
-        .menu-btn i {
-            font-size: 3.5rem;
             margin-bottom: 20px;
-            background: var(--gradient);
+        }
+        .logo h1 {
+            font-size: 48px;
+            font-weight: bold;
+            background: linear-gradient(45deg, #ffffff, #4488ff);
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
+            text-shadow: 0 0 20px rgba(68,136,255,0.3);
+            letter-spacing: 4px;
         }
-
-        .menu-btn h3 {
-            font-size: 1.6rem;
-            margin-bottom: 15px;
-        }
-
-        .menu-btn p {
-            color: var(--text-secondary);
-            font-size: 1rem;
-            line-height: 1.5;
-        }
-
-        /* الأقسام */
-        .content-section {
-            display: none;
-            background: var(--card-bg);
+        .display-area {
+            background: #0a0e14;
             border-radius: 20px;
-            padding: 40px;
-            margin-top: 30px;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
-            animation: fadeInUp 0.6s ease;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        @keyframes fadeInUp {
-            from { 
-                opacity: 0; 
-                transform: translateY(30px); 
-            }
-            to { 
-                opacity: 1; 
-                transform: translateY(0); 
-            }
-        }
-
-        .back-btn {
-            background: var(--primary);
-            color: white;
-            border: none;
-            border-radius: 10px;
-            padding: 12px 25px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 25px;
-            transition: all 0.3s ease;
-            font-size: 1rem;
-        }
-
-        .back-btn:hover {
-            background: var(--primary-dark);
-            transform: translateX(-5px);
-        }
-
-        /* سيرفرات رامبو */
-        .servers-list {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 25px;
-            margin-top: 30px;
-        }
-
-        .server-card {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 15px;
-            padding: 25px;
-            transition: all 0.3s ease;
-            border-left: 5px solid var(--primary);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .server-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.03), transparent);
-            transform: translateX(-100%);
-        }
-
-        .server-card:hover::before {
-            transform: translateX(100%);
-            transition: transform 0.6s;
-        }
-
-        .server-card:hover {
-            transform: translateY(-8px);
-            background: rgba(255, 255, 255, 0.08);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-        }
-
-        .server-card h4 {
-            font-size: 1.4rem;
+            padding: 16px;
+            min-height: 120px;
+            max-height: 200px;
+            overflow-y: auto;
             margin-bottom: 15px;
-            color: var(--primary);
+            border: 1px solid #2a3040;
+            color: #ffffff;
+            font-size: 16px;
+            line-height: 1.5;
+            font-family: monospace;
+            white-space: pre-wrap;
+            word-break: break-all;
         }
-
-        .server-info {
+        .buttons {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        .btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 28px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .btn-start {
+            background: linear-gradient(45deg, #2277ff, #4488ff);
+            color: white;
+            box-shadow: 0 4px 12px rgba(34,119,255,0.3);
+        }
+        .btn-start:active { transform: scale(0.97); }
+        .btn-stop {
+            background: linear-gradient(45deg, #ff3355, #ff5577);
+            color: white;
+            box-shadow: 0 4px 12px rgba(255,51,85,0.3);
+        }
+        .btn-stop:active { transform: scale(0.97); }
+        .section-title {
+            color: #88aaff;
+            font-size: 14px;
+            margin-bottom: 8px;
+            letter-spacing: 1px;
+        }
+        .add-sentence {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+        .add-sentence input {
+            flex: 1;
+            padding: 10px 16px;
+            background: #0a0e14;
+            border: 1px solid #2a3040;
+            border-radius: 28px;
+            color: white;
+            font-size: 14px;
+        }
+        .add-sentence button {
+            background: #2a6f2a;
+            border: none;
+            border-radius: 28px;
+            padding: 0 20px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .sentence-list {
+            max-height: 250px;
+            overflow-y: auto;
+            background: #0a0e14;
+            border-radius: 16px;
+            padding: 8px;
+        }
+        .sentence-item {
             display: flex;
             justify-content: space-between;
-            margin-top: 20px;
-            color: var(--text-secondary);
-            font-size: 0.95rem;
-        }
-
-        .online {
-            color: var(--secondary);
-            font-weight: bold;
-        }
-
-        .join-btn {
-            background: var(--primary);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            padding: 8px 16px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            margin-top: 15px;
-            font-size: 0.9rem;
-        }
-
-        .join-btn:hover {
-            background: var(--primary-dark);
-        }
-
-        /* متجر رامبو */
-        .owner-panel {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 15px;
-            padding: 25px;
-            margin-bottom: 30px;
-            border: 2px dashed var(--accent);
-            position: relative;
-        }
-
-        .owner-panel h3 {
-            color: var(--accent);
-            margin-bottom: 20px;
-            display: flex;
             align-items: center;
-            gap: 12px;
-            font-size: 1.5rem;
+            background: #11161f;
+            margin: 6px 0;
+            padding: 10px 12px;
+            border-radius: 12px;
+            border-left: 3px solid #4488ff;
         }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            color: var(--text-secondary);
-            font-weight: 500;
-        }
-
-        .form-control {
-            width: 100%;
-            padding: 12px 15px;
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 8px;
-            color: var(--text);
-            font-size: 1rem;
-            transition: all 0.3s ease;
-        }
-
-        .form-control:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(88, 101, 242, 0.3);
-        }
-
-        .submit-btn {
-            background: var(--success);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            padding: 12px 25px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 1rem;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .submit-btn:hover {
-            background: #2d8c4a;
-            transform: translateY(-2px);
-        }
-
-        .products-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 25px;
-            margin-top: 30px;
-        }
-
-        .product-card {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 15px;
-            overflow: hidden;
-            transition: all 0.4s ease;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            position: relative;
-        }
-
-        .product-card:hover {
-            transform: translateY(-10px) scale(1.02);
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
-        }
-
-        .product-image {
-            height: 200px;
-            background: var(--gradient);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 3.5rem;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .product-image::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-            transform: translateX(-100%);
-        }
-
-        .product-card:hover .product-image::after {
-            transform: translateX(100%);
-            transition: transform 0.6s;
-        }
-
-        .product-details {
-            padding: 20px;
-        }
-
-        .product-details h4 {
-            font-size: 1.3rem;
-            margin-bottom: 10px;
-        }
-
-        .product-price {
-            color: var(--secondary);
-            font-weight: bold;
-            font-size: 1.3rem;
-            margin-bottom: 12px;
-        }
-
-        .product-description {
-            color: var(--text-secondary);
-            font-size: 0.95rem;
-            margin-bottom: 20px;
-            line-height: 1.5;
-        }
-
-        .buy-btn {
-            background: var(--primary);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            padding: 10px 20px;
-            width: 100%;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 1rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-
-        .buy-btn:hover {
-            background: var(--primary-dark);
-            transform: translateY(-2px);
-        }
-
-        /* تعريف رامبو */
-        .about-content {
-            line-height: 1.7;
-            font-size: 1.1rem;
-        }
-
-        .about-content p {
-            margin-bottom: 20px;
-        }
-
-        .features {
-            display: flex;
-            gap: 25px;
-            margin-top: 40px;
-            flex-wrap: wrap;
-        }
-
-        .feature {
+        .sentence-item span {
             flex: 1;
-            min-width: 280px;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 15px;
-            padding: 25px;
-            text-align: center;
-            transition: all 0.3s ease;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #ddd;
+            font-size: 13px;
+            word-break: break-word;
         }
-
-        .feature:hover {
-            transform: translateY(-8px);
-            background: rgba(255, 255, 255, 0.08);
-        }
-
-        .feature i {
-            font-size: 3rem;
-            background: var(--gradient);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            margin-bottom: 20px;
-        }
-
-        .feature h4 {
-            font-size: 1.3rem;
-            margin-bottom: 12px;
-        }
-
-        .feature p {
-            color: var(--text-secondary);
-            font-size: 0.95rem;
-        }
-
-        /* الفوتر */
-        footer {
-            text-align: center;
-            padding: 40px 0;
-            margin-top: 60px;
-            color: var(--text-secondary);
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .discord-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 12px;
-            background: var(--primary);
+        .sentence-item button {
+            background: #5a2a2a;
+            border: none;
+            border-radius: 20px;
+            padding: 4px 12px;
             color: white;
-            padding: 15px 30px;
-            border-radius: 10px;
-            text-decoration: none;
-            margin-top: 25px;
-            transition: all 0.3s ease;
-            font-size: 1.1rem;
+            cursor: pointer;
+            margin-left: 8px;
         }
-
-        .discord-btn:hover {
-            background: var(--primary-dark);
-            transform: translateY(-3px);
-            box-shadow: 0 10px 20px rgba(88, 101, 242, 0.3);
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 10px;
+            color: #446688;
         }
-
-        /* تأثيرات الثلج */
-        .snowflakes {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: -1;
+        ::-webkit-scrollbar {
+            width: 4px;
         }
-
-        .snowflake {
-            position: absolute;
-            top: -10px;
-            color: rgba(255, 255, 255, 0.7);
-            font-size: 1em;
-            animation: fall linear forwards;
+        ::-webkit-scrollbar-track {
+            background: #1a1f2a;
         }
-
-        @keyframes fall {
-            to {
-                transform: translateY(100vh);
-            }
-        }
-
-        /* تأثيرات متقدمة */
-        .floating {
-            animation: floating 3s ease-in-out infinite;
-        }
-
-        @keyframes floating {
-            0% { transform: translateY(0px); }
-            50% { transform: translateY(-15px); }
-            100% { transform: translateY(0px); }
-        }
-
-        /* تصميم متجاوب */
-        @media (max-width: 768px) {
-            .main-menu {
-                flex-direction: column;
-                align-items: center;
-            }
-            
-            .menu-btn {
-                width: 100%;
-                max-width: 350px;
-            }
-            
-            h1 {
-                font-size: 2.2rem;
-            }
-            
-            .logo {
-                font-size: 3rem;
-            }
-            
-            .content-section {
-                padding: 25px;
-            }
-            
-            .features {
-                flex-direction: column;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .container {
-                padding: 15px;
-            }
-            
-            h1 {
-                font-size: 1.8rem;
-            }
-            
-            .logo {
-                font-size: 2.5rem;
-            }
-            
-            .menu-btn {
-                padding: 25px 20px;
-            }
-            
-            .servers-list,
-            .products-grid {
-                grid-template-columns: 1fr;
-            }
+        ::-webkit-scrollbar-thumb {
+            background: #4488ff;
+            border-radius: 4px;
         }
     </style>
 </head>
 <body>
-    <!-- تأثير الثلج -->
-    <div class="snowflakes" id="snowflakes"></div>
-
-    <div class="container">
-        <header>
-            <div class="logo floating">
-                <i class="fab fa-discord"></i>
-            </div>
-            <h1>رامبو - بوت ديسكورد</h1>
-            <p class="subtitle">Programmed by dev_skyler</p>
-            <div class="status">
-                <span>The Web Is online 🟢/span>
-                <div class="status-dot"></div>
-            </div>
-        </header>
-
-        <div class="main-menu" id="mainMenu">
-            <div class="menu-btn" onclick="showSection('servers')">
-                <i class="fas fa-server"></i>
-                <h3>سيرفرات رامبو</h3>
-                <p>استعرض سيرفرات رامبو المتاحة والانضم إليها</p>
-            </div>
-            <div class="menu-btn" onclick="showSection('store')">
-                <i class="fas fa-shopping-cart"></i>
-                <h3>متجر رامبو</h3>
-                <p>تسوق من منتجات رامبو المميزة والحصرية</p>
-            </div>
-            <div class="menu-btn" onclick="showSection('about')">
-                <i class="fas fa-info-circle"></i>
-                <h3>تعريف رامبو</h3>
-                <p>تعرف أكثر على بوت رامبو وميزاته الرائعة</p>
-            </div>
-        </div>
-
-        <!-- قسم سيرفرات رامبو -->
-        <div class="content-section" id="serversSection">
-            <button class="back-btn" onclick="showMainMenu()">
-                <i class="fas fa-arrow-right"></i> الرجوع للخلف
-            </button>
-            <h2>سيرفرات رامبو</h2>
-            <p>هنا يمكنك استعراض سيرفرات رامبو المتاحة والانضمام إليها</p>
-            
-            <div class="servers-list">
-                <div class="server-card">
-                    <h4>سيرفر الألعاب</h4>
-                    <p>سيرفر مخصص لمحبي الألعاب والمنافسات، يحتوي على قنوات للألعاب المختلفة والمسابقات</p>
-                    <div class="server-info">
-                        <span>الأعضاء: 1,254</span>
-                        <span class="online">متصل</span>
-                    </div>
-                    <button class="join-btn" onclick="joinServer('الألعاب')">
-                        <i class="fas fa-sign-in-alt"></i> الانضمام
-                    </button>
-                </div>
-                <div class="server-card">
-                    <h4>سيرفر البرمجة</h4>
-                    <p>مجتمع للمبرمجين والمطورين، يقدم مساعدة في البرمجة ودروس ومشاريع مشتركة</p>
-                    <div class="server-info">
-                        <span>الأعضاء: 892</span>
-                        <span class="online">متصل</span>
-                    </div>
-                    <button class="join-btn" onclick="joinServer('البرمجة')">
-                        <i class="fas fa-sign-in-alt"></i> الانضمام
-                    </button>
-                </div>
-                <div class="server-card">
-                    <h4>سيرفر الموسيقى</h4>
-                    <p>لمحبي الموسيقى والفنون، يمكنك الاستماع للموسيقى مع الأصدقاء ومشاركة الأغاني</p>
-                    <div class="server-info">
-                        <span>الأعضاء: 745</span>
-                        <span class="online">متصل</span>
-                    </div>
-                    <button class="join-btn" onclick="joinServer('الموسيقى')">
-                        <i class="fas fa-sign-in-alt"></i> الانضمام
-                    </button>
-                </div>
-                <div class="server-card">
-                    <h4>سيرفر الدردشة</h4>
-                    <p>مكان للتواصل والمناقشات الودية، يمكنك التعرف على أصدقاء جدد وتبادل الآراء</p>
-                    <div class="server-info">
-                        <span>الأعضاء: 1,532</span>
-                        <span class="online">متصل</span>
-                    </div>
-                    <button class="join-btn" onclick="joinServer('الدردشة')">
-                        <i class="fas fa-sign-in-alt"></i> الانضمام
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <!-- قسم متجر رامبو -->
-        <div class="content-section" id="storeSection">
-            <button class="back-btn" onclick="showMainMenu()">
-                <i class="fas fa-arrow-right"></i> الرجوع للخلف
-            </button>
-            <h2>متجر رامبو</h2>
-            <p>تسوق من منتجات رامبو المميزة والحصرية</p>
-            
-            <!-- لوحة المالك (مخفية للعامة) -->
-            <div class="owner-panel" id="ownerPanel">
-                <h3><i class="fas fa-crown"></i> لوحة المالك</h3>
-                <div class="form-group">
-                    <label for="productName">اسم المنتج</label>
-                    <input type="text" id="productName" class="form-control" placeholder="أدخل اسم المنتج">
-                </div>
-                <div class="form-group">
-                    <label for="productPrice">السعر (ريال سعودي)</label>
-                    <input type="number" id="productPrice" class="form-control" placeholder="أدخل السعر">
-                </div>
-                <div class="form-group">
-                    <label for="productDescription">مواصفات المنتج</label>
-                    <textarea id="productDescription" class="form-control" rows="3" placeholder="أدخل مواصفات المنتج"></textarea>
-                </div>
-                <div class="form-group">
-                    <label for="productImage">صورة المنتج</label>
-                    <input type="file" id="productImage" class="form-control" accept="image/*">
-                </div>
-                <button class="submit-btn" onclick="addProduct()">
-                    <i class="fas fa-check"></i> إضافة المنتج
-                </button>
-            </div>
-            
-            <div class="products-grid" id="productsGrid">
-                <!-- المنتجات ستضاف هنا ديناميكياً -->
-            </div>
-        </div>
-
-        <!-- قسم تعريف رامبو -->
-        <div class="content-section" id="aboutSection">
-            <button class="back-btn" onclick="showMainMenu()">
-                <i class="fas fa-arrow-right"></i> الرجوع للخلف
-            </button>
-            <h2>تعريف رامبو</h2>
-            <div class="about-content">
-                <p>رامبو هو بوت ديسكورد متطور يقدم مجموعة واسعة من الميزات والخدمات للسيرفرات. تم تطويره بأحدث التقنيات لضمان أداء مستقر وسلس.</p>
-                <p>يتميز البوت بواجهة سهلة الاستخدام وإعدادات مرنة تتيح للمستخدمين تخصيص البوت حسب احتياجاتهم.</p>
-                
-                <div class="features">
-                    <div class="feature">
-                        <i class="fas fa-shield-alt"></i>
-                        <h4>حماية متقدمة</h4>
-                        <p>نظام حماية متكامل ضد المخربين والسبام والروابط الضارة</p>
-                    </div>
-                    <div class="feature">
-                        <i class="fas fa-music"></i>
-                        <h4>موسيقى عالية الجودة</h4>
-                        <p>استمتع بميزات موسيقى متطورة وجودة صوت عالية بدون تقطيع</p>
-                    </div>
-                    <div class="feature">
-                        <i class="fas fa-gamepad"></i>
-                        <h4>ألعاب وتفاعل</h4>
-                        <p>مجموعة متنوعة من الألعاب والأنشطة التفاعلية لأعضاء السيرفر</p>
-                    </div>
-                    <div class="feature">
-                        <i class="fas fa-chart-line"></i>
-                        <h4>إحصائيات مفصلة</h4>
-                        <p>احصل على إحصائيات مفصلة عن نشاط السيرفر وأعضاءه</p>
-                    </div>
-                    <div class="feature">
-                        <i class="fas fa-cogs"></i>
-                        <h4>إعدادات مرنة</h4>
-                        <p>سهولة في التخصيص والإعدادات لتلائم جميع احتياجاتك</p>
-                    </div>
-                    <div class="feature">
-                        <i class="fas fa-headset"></i>
-                        <h4>دعم فني</h4>
-                        <p>فريق دعم فني متاح على مدار الساعة لمساعدتك في أي استفسار</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <footer>
-            <p>جميع الحقوق محفوظة &copy; 2023 رامبو - بوت ديسكورد</p>
-            <a href="#" class="discord-btn">
-                <i class="fab fa-discord"></i> انضم إلى سيرفر الدعم
-            </a>
-        </footer>
+<div class="app-container">
+    <div class="logo">
+        <h1>KLOZR</h1>
     </div>
 
-    <script>
-        // بيانات المنتجات الافتراضية
-        const products = [
-            {
-                id: 1,
-                name: "بوت التوكنات ",
-                price: 15,
-                description: "بوت التوكنات  V2",
-                icon: "fas fa-crown"
-            },
-            {
-                id: 2,
-                name: "بوت الهوستات",
-                price: 20,
-                description: "بوت بيع هوستات يدون Vps مطور",
-                icon: "fas fa-music"
-            },
-            {
-                id: 3,
-                name: "بروجكت  الستور",
-                price: 10,
-                description: "بروجكت الستور المطور",
-                icon: "fas fa-gamepad"
-            },
-            {
-                id: 4,
-                name: "بروجكت السستم ",
-                price: 5,
-                description: "بروجكت يمسك سيرفرك تلقائي بدون تدخل بشري",
-                icon: "fas fa-shield-alt"
-            }
-        ];
+    <div class="display-area" id="displayArea">
+        <!-- النص المكتوب يظهر هنا -->
+    </div>
 
-        // تهيئة الموقع
-        document.addEventListener('DOMContentLoaded', function() {
-            renderProducts();
-            createSnowflakes();
-            
-            // إخفاء لوحة المالك (للعرض فقط، يمكن إظهارها للمالك الحقيقي)
-            document.getElementById('ownerPanel').style.display = 'none';
+    <div class="buttons">
+        <button class="btn btn-start" id="startBtn">▶ START</button>
+        <button class="btn btn-stop" id="stopBtn">⏹ STOP</button>
+    </div>
+
+    <div class="section-title">📝 إضافة جملة جديدة</div>
+    <div class="add-sentence">
+        <input type="text" id="newSentence" placeholder="اكتب جملة ثم اضف...">
+        <button id="addBtn">➕</button>
+    </div>
+
+    <div class="section-title">📋 قائمة الجمل (سيتم كتابتها تلقائياً)</div>
+    <div class="sentence-list" id="sentenceList"></div>
+
+    <div class="footer">
+        © 2024 KLOZR | by .7ki. | @Fenix
+    </div>
+</div>
+
+<script>
+    // تحميل الجمل من التخزين المحلي
+    let sentences = [];
+
+    function loadSentences() {
+        const saved = localStorage.getItem('klozr_sentences');
+        if (saved) {
+            sentences = JSON.parse(saved);
+        }
+        if (sentences.length === 0) {
+            sentences = [
+                "مرحباً بك في تطبيق KLOZR",
+                "هذا كيبورد يكتب تلقائياً",
+                "يمكنك إضافة جمل جديدة",
+                "استمتع بالتجربة"
+            ];
+        }
+        renderSentenceList();
+    }
+
+    function saveSentences() {
+        localStorage.setItem('klozr_sentences', JSON.stringify(sentences));
+        renderSentenceList();
+    }
+
+    function renderSentenceList() {
+        const container = document.getElementById('sentenceList');
+        container.innerHTML = '';
+        sentences.forEach((sentence, index) => {
+            const div = document.createElement('div');
+            div.className = 'sentence-item';
+            const span = document.createElement('span');
+            span.innerText = sentence.length > 50 ? sentence.slice(0, 50) + '...' : sentence;
+            const delBtn = document.createElement('button');
+            delBtn.innerText = 'X';
+            delBtn.onclick = () => {
+                sentences.splice(index, 1);
+                saveSentences();
+                if (typingInterval) stopTyping();
+            };
+            div.appendChild(span);
+            div.appendChild(delBtn);
+            container.appendChild(div);
         });
+    }
 
-        // إظهار القسم المحدد وإخفاء القائمة الرئيسية
-        function showSection(section) {
-            document.getElementById('mainMenu').style.display = 'none';
-            
-            if (section === 'servers') {
-                document.getElementById('serversSection').style.display = 'block';
-            } else if (section === 'store') {
-                document.getElementById('storeSection').style.display = 'block';
-            } else if (section === 'about') {
-                document.getElementById('aboutSection').style.display = 'block';
-            }
+    // إضافة جملة جديدة
+    document.getElementById('addBtn').onclick = () => {
+        const input = document.getElementById('newSentence');
+        const text = input.value.trim();
+        if (text) {
+            sentences.push(text);
+            saveSentences();
+            input.value = '';
+        }
+    };
+
+    // منطقة العرض
+    const displayArea = document.getElementById('displayArea');
+    let typingInterval = null;
+    let currentSentenceIndex = 0;
+    let currentCharIndex = 0;
+    let currentText = '';
+    let isTyping = false;
+
+    function updateDisplay() {
+        displayArea.innerText = currentText;
+        displayArea.scrollTop = displayArea.scrollHeight;
+    }
+
+    function typeNextChar() {
+        if (!isTyping) return;
+        if (sentences.length === 0) {
+            stopTyping();
+            return;
+        }
+        if (currentSentenceIndex >= sentences.length) {
+            // نعيد من البداية
+            currentSentenceIndex = 0;
+            currentCharIndex = 0;
+            currentText = '';
         }
 
-        // إظهار القائمة الرئيسية وإخفاء جميع الأقسام
-        function showMainMenu() {
-            document.getElementById('mainMenu').style.display = 'flex';
-            document.getElementById('serversSection').style.display = 'none';
-            document.getElementById('storeSection').style.display = 'none';
-            document.getElementById('aboutSection').style.display = 'none';
+        const sentence = sentences[currentSentenceIndex];
+        if (currentCharIndex < sentence.length) {
+            currentText += sentence[currentCharIndex];
+            updateDisplay();
+            currentCharIndex++;
+        } else {
+            // ننتقل إلى الجملة التالية
+            currentText += '\n';
+            updateDisplay();
+            currentSentenceIndex++;
+            currentCharIndex = 0;
         }
+    }
 
-        // عرض المنتجات في المتجر
-        function renderProducts() {
-            const productsGrid = document.getElementById('productsGrid');
-            productsGrid.innerHTML = '';
-            
-            products.forEach(product => {
-                const productCard = document.createElement('div');
-                productCard.className = 'product-card';
-                productCard.innerHTML = `
-                    <div class="product-image">
-                        <i class="${product.icon}"></i>
-                    </div>
-                    <div class="product-details">
-                        <h4>${product.name}</h4>
-                        <div class="product-price">${product.price} ر.س</div>
-                        <div class="product-description">${product.description}</div>
-                        <button class="buy-btn" onclick="buyProduct(${product.id})">
-                            <i class="fas fa-shopping-cart"></i> شراء المنتج
-                        </button>
-                    </div>
-                `;
-                productsGrid.appendChild(productCard);
-            });
+    function startTyping() {
+        if (sentences.length === 0) {
+            displayArea.innerText = '⚠️ أضف جمل أولاً';
+            return;
         }
+        if (typingInterval) clearInterval(typingInterval);
+        isTyping = true;
+        currentSentenceIndex = 0;
+        currentCharIndex = 0;
+        currentText = '';
+        updateDisplay();
+        typingInterval = setInterval(typeNextChar, 0.1); // 0.1ms بين كل حرف (بسرعة عالية)
+    }
 
-        // إضافة منتج جديد (للمالك)
-        function addProduct() {
-            const name = document.getElementById('productName').value;
-            const price = document.getElementById('productPrice').value;
-            const description = document.getElementById('productDescription').value;
-            
-            if (name && price && description) {
-                const newProduct = {
-                    id: products.length + 1,
-                    name: name,
-                    price: parseFloat(price),
-                    description: description,
-                    icon: "fas fa-star"
-                };
-                
-                products.push(newProduct);
-                renderProducts();
-                
-                // إعادة تعيين الحقول
-                document.getElementById('productName').value = '';
-                document.getElementById('productPrice').value = '';
-                document.getElementById('productDescription').value = '';
-                
-                alert('تم إضافة المنتج بنجاح!');
-            } else {
-                alert('يرجى ملء جميع الحقول');
-            }
+    function stopTyping() {
+        isTyping = false;
+        if (typingInterval) {
+            clearInterval(typingInterval);
+            typingInterval = null;
         }
+    }
 
-        // شراء منتج
-        function buyProduct(productId) {
-            const product = products.find(p => p.id === productId);
-            alert(` للحصول على المنتج المراد شراءه يرجى التحويل لهذا الايبان SA5380207755936222121011 الاسم = احمد  ،  قم بتحويل المبلغ حسب البروجكت المراد شراءة و اكتب فلوصف اسم البروجكت ولما تحول ارجع للصفحة وبيجيك البروجكت. `);
-            //  تم
-        }
+    document.getElementById('startBtn').onclick = startTyping;
+    document.getElementById('stopBtn').onclick = stopTyping;
 
-        // الانضمام إلى سيرفر
-        function joinServer(serverName) {
-            alert(`سيتم توجيهك للانضمام إلى سيرفر ${serverName}`);
-            // في التطبيق الحقيقي، سيتم توجيه المستخدم إلى رابط الدعوة
-        }
-
-        // إنشاء تأثير الثلج
-        function createSnowflakes() {
-            const snowflakesContainer = document.getElementById('snowflakes');
-            const snowflakeCount = 60;
-            const snowflakeSymbols = ['❄', '❅', '❆', '•'];
-            
-            for (let i = 0; i < snowflakeCount; i++) {
-                const snowflake = document.createElement('div');
-                snowflake.className = 'snowflake';
-                snowflake.innerHTML = snowflakeSymbols[Math.floor(Math.random() * snowflakeSymbols.length)];
-                
-                // وضع عشوائي
-                const left = Math.random() * 100;
-                const animationDuration = Math.random() * 10 + 5;
-                const animationDelay = Math.random() * 5;
-                const size = Math.random() * 15 + 10;
-                const opacity = Math.random() * 0.5 + 0.3;
-                
-                snowflake.style.left = `${left}vw`;
-                snowflake.style.animationDuration = `${animationDuration}s`;
-                snowflake.style.animationDelay = `${animationDelay}s`;
-                snowflake.style.fontSize = `${size}px`;
-                snowflake.style.opacity = opacity;
-                
-                snowflakesContainer.appendChild(snowflake);
-            }
-        }
-
-        // إظهار/إخفاء لوحة المالك (للتجربة)
-        function toggleOwnerPanel() {
-            const panel = document.getElementById('ownerPanel');
-            panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
-        }
-
-        // اختصار لوحة المالك (Ctrl+O)
-        document.addEventListener('keydown', function(e) {
-            if (e.ctrlKey && e.key === 'o') {
-                e.preventDefault();
-                toggleOwnerPanel();
-            }
-        });
-    </script>
+    loadSentences();
+</script>
 </body>
 </html>
