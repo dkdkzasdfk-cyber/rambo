@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>KLOZR | Speed Typing Test</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #0a0a0a;
+            font-family: 'Segoe UI', 'SF Mono', monospace;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .app {
+            max-width: 900px;
+            margin: 0 auto;
+            background: #111;
+            border-radius: 32px;
+            padding: 24px;
+            border: 1px solid #222;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 1px solid #222;
+            padding-bottom: 20px;
+        }
+
+        .header h1 {
+            font-size: 48px;
+            font-weight: 300;
+            letter-spacing: 8px;
+            color: #fff;
+            text-shadow: 0 0 10px rgba(255,255,255,0.1);
+        }
+
+        .header p {
+            color: #444;
+            font-size: 12px;
+            margin-top: 8px;
+        }
+
+        .terms {
+            background: #0f0f0f;
+            border-radius: 24px;
+            padding: 24px;
+            margin-bottom: 24px;
+            text-align: center;
+            border: 1px solid #222;
+        }
+
+        .terms p {
+            color: #888;
+            margin-bottom: 16px;
+            line-height: 1.6;
+            font-size: 14px;
+        }
+
+        .terms button {
+            background: #1a1a1a;
+            border: 1px solid #333;
+            border-radius: 40px;
+            padding: 10px 28px;
+            color: #fff;
+            font-size: 14px;
+            cursor: pointer;
+            margin: 0 8px;
+            transition: 0.2s;
+        }
+
+        .terms button.accept {
+            background: #2a2a2a;
+            border-color: #444;
+        }
+
+        .terms button:hover {
+            background: #222;
+        }
+
+        .menu {
+            display: none;
+        }
+
+        .menu-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 30px;
+        }
+
+        .menu-btn {
+            background: #0f0f0f;
+            border: 1px solid #222;
+            border-radius: 48px;
+            padding: 16px;
+            color: #fff;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.2s;
+            text-align: center;
+        }
+
+        .menu-btn:hover {
+            background: #1a1a1a;
+            border-color: #333;
+        }
+
+        .test-area {
+            display: none;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .stats-bar {
+            display: flex;
+            justify-content: space-between;
+            background: #0f0f0f;
+            border-radius: 48px;
+            padding: 12px 20px;
+            border: 1px solid #222;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-label {
+            color: #555;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .stat-value {
+            color: #fff;
+            font-size: 24px;
+            font-weight: 300;
+        }
+
+        .reference-text {
+            background: #0a0a0a;
+            border: 1px solid #222;
+            border-radius: 20px;
+            padding: 20px;
+            color: #2a2a2a;
+            font-size: 16px;
+            line-height: 1.8;
+            font-family: monospace;
+            max-height: 200px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
+        .typing-overlay {
+            position: relative;
+            background: #0a0a0a;
+            border: 1px solid #222;
+            border-radius: 20px;
+            min-height: 200px;
+        }
+
+        .reference-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            padding: 20px;
+            color: #2a2a2a;
+            font-size: 16px;
+            line-height: 1.8;
+            font-family: monospace;
+            white-space: pre-wrap;
+            word-break: break-word;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .typing-input {
+            position: relative;
+            width: 100%;
+            min-height: 200px;
+            background: transparent;
+            border: none;
+            padding: 20px;
+            color: #fff;
+            font-size: 16px;
+            line-height: 1.8;
+            font-family: monospace;
+            resize: vertical;
+            z-index: 2;
+            background: transparent;
+            outline: none;
+        }
+
+        .result-panel {
+            background: #0f0f0f;
+            border-radius: 20px;
+            padding: 20px;
+            text-align: center;
+            border: 1px solid #222;
+        }
+
+        .result-stats {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        .result-stat {
+            text-align: center;
+        }
+
+        .result-stat .value {
+            font-size: 32px;
+            color: #fff;
+        }
+
+        .result-stat .label {
+            color: #555;
+            font-size: 12px;
+        }
+
+        button {
+            background: #1a1a1a;
+            border: 1px solid #333;
+            border-radius: 40px;
+            padding: 12px 24px;
+            color: #fff;
+            font-size: 14px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        button:hover {
+            background: #222;
+        }
+
+        .contacts-area, .stats-area, .settings-area {
+            display: none;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .contact-card {
+            background: #0f0f0f;
+            border: 1px solid #222;
+            border-radius: 20px;
+            padding: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .contact-info h3 {
+            color: #fff;
+            font-size: 16px;
+            margin-bottom: 4px;
+        }
+
+        .contact-info p {
+            color: #555;
+            font-size: 12px;
+        }
+
+        .add-contact {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .add-contact input {
+            flex: 1;
+            background: #0a0a0a;
+            border: 1px solid #222;
+            border-radius: 40px;
+            padding: 12px 16px;
+            color: #fff;
+            outline: none;
+        }
+
+        .stats-table {
+            background: #0f0f0f;
+            border-radius: 20px;
+            padding: 20px;
+            border: 1px solid #222;
+        }
+
+        .stats-table div {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #1a1a1a;
+        }
+
+        .setting-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 16px;
+            background: #0f0f0f;
+            border-radius: 48px;
+            border: 1px solid #222;
+        }
+
+        h2 {
+            color: #fff;
+            font-size: 20px;
+            font-weight: 300;
+            letter-spacing: 2px;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #1a1a1a;
+            color: #333;
+            font-size: 10px;
+        }
+    </style>
+</head>
+<body>
+<div class="app" id="app">
+    <!-- شاشة الموافقة -->
+    <div id="termsScreen">
+        <div class="header">
+            <h1>KLOZR</h1>
+            <p>speed typing test</p>
+        </div>
+        <div class="terms">
+            <p>استخدام هذا التطبيق يعني موافقتك على الشروط التالية:</p>
+            <p>1. الاختبار يبدأ تلقائياً عند كتابة أول حرف</p>
+            <p>2. يتم حساب السرعة (WPM) والدقة والوقت</p>
+            <p>3. جميع الحقوق محفوظة | نسخة تجريبية</p>
+            <button class="accept" onclick="acceptTerms()">موافقة</button>
+            <button onclick="declineTerms()">رفض</button>
+        </div>
+        <div class="footer">
+            KLOZR v2.0 | by .7ki.
+        </div>
+    </div>
+
+    <!-- القائمة الرئيسية -->
+    <div id="mainMenu" class="menu">
+        <div class="header">
+            <h1>KLOZR</h1>
+            <p>speed typing test</p>
+        </div>
+        <div class="menu-buttons">
+            <button class="menu-btn" onclick="showTest()">اختبار السرعة</button>
+            <button class="menu-btn" onclick="showStats()">إحصائياتي</button>
+            <button class="menu-btn" onclick="showContacts()">جهات الاتصال</button>
+            <button class="menu-btn" onclick="showSettings()">الإعدادات</button>
+        </div>
+        <div class="footer">
+            KLOZR v2.0 | by .7ki.
+        </div>
+    </div>
+
+    <!-- اختبار السرعة -->
+    <div id="testArea" class="test-area">
+        <div class="stats-bar">
+            <div class="stat"><div class="stat-label">الوقت</div><div class="stat-value" id="timerDisplay">0.0</div></div>
+            <div class="stat"><div class="stat-label">WPM</div><div class="stat-value" id="wpmDisplay">0</div></div>
+            <div class="stat"><div class="stat-label">صحة</div><div class="stat-value" id="accuracyDisplay">0%</div></div>
+        </div>
+        <div class="reference-text" id="referenceText">
+            اصمل ياغبي الاستاذ دكتور محمد لبنان هذا النص هو نص تجريبي لاختبار سرعة الكتابة في تطبيق KLOZR. كلما كتبت أسرع كانت نتيجتك أفضل. حاول أن تكتب النص بالضبط كما هو مع مراعاة الحروف والمسافات وعلامات الترقيم. هذا التطبيق يساعدك على تحسين سرعة كتابتك ودقتك. يمكنك إعادة الاختبار عدة مرات ومقارنة النتائج. ركز جيداً واكتب بسرعة دون أخطاء. التطبيق يحسب عدد الكلمات الصحيحة في الدقيقة الواحدة والوقت المستغرق والدقة المئوية. استمتع بتجربة الاختبار وطور من مهاراتك الكتابية. هذا النص مأخوذ من مقالات تدريبية لزيادة سرعة الكتابة على لوحة المفاتيح. النصوص القادمة ستكون أكثر تحدياً. حافظ على تركيزك وحاول تحسين أرقامك في كل مرة. النتيجة الجيدة تعني أنك أصبحت كاتباً أسرع وأدق. استمر في التدريب وستلاحظ الفرق قريباً.
+        </div>
+        <div class="typing-overlay">
+            <div class="reference-overlay" id="referenceOverlay"></div>
+            <textarea class="typing-input" id="typingInput" placeholder="ابدأ الكتابة هنا..." rows="8"></textarea>
+        </div>
+        <div id="resultPanel" class="result-panel" style="display: none;">
+            <div class="result-stats">
+                <div class="result-stat"><div class="value" id="finalWpm">0</div><div class="label">WPM</div></div>
+                <div class="result-stat"><div class="value" id="finalTime">0</div><div class="label">ثانية</div></div>
+                <div class="result-stat"><div class="value" id="finalAccuracy">0%</div><div class="label">الدقة</div></div>
+                <div class="result-stat"><div class="value" id="finalCorrect">0</div><div class="label">صحيحة</div></div>
+                <div class="result-stat"><div class="value" id="finalWrong">0</div><div class="label">خاطئة</div></div>
+            </div>
+            <button onclick="resetTest()">إعادة الاختبار</button>
+            <button onclick="backToMenu()">القائمة الرئيسية</button>
+        </div>
+        <button onclick="resetTest()" style="margin-top: 10px;">إعادة تعيين</button>
+        <button onclick="backToMenu()" style="margin-top: 10px;">رجوع</button>
+    </div>
+
+    <!-- الإحصائيات -->
+    <div id="statsArea" class="stats-area">
+        <h2>الإحصائيات السابقة</h2>
+        <div id="statsList" class="stats-table"></div>
+        <button onclick="clearStats()">مسح الإحصائيات</button>
+        <button onclick="backToMenu()">رجوع</button>
+    </div>
+
+    <!-- جهات الاتصال -->
+    <div id="contactsArea" class="contacts-area">
+        <h2>جهات الاتصال</h2>
+        <div class="add-contact">
+            <input type="text" id="contactName" placeholder="الاسم">
+            <input type="text" id="contactInfo" placeholder="معلومات">
+            <button onclick="addContact()">إضافة</button>
+        </div>
+        <div id="contactsList"></div>
+        <button onclick="backToMenu()">رجوع</button>
+    </div>
+
+    <!-- الإعدادات -->
+    <div id="settingsArea" class="settings-area">
+        <h2>الإعدادات</h2>
+        <div class="setting-item">
+            <span>الوضع الليلي</span>
+            <input type="checkbox" id="darkModeToggle" onchange="toggleDarkMode()">
+        </div>
+        <div class="setting-item">
+            <span>المؤثرات الصوتية</span>
+            <input type="checkbox" id="soundToggle">
+        </div>
+        <button onclick="backToMenu()">رجوع</button>
+    </div>
+</div>
+
+<script>
+    let testStarted = false;
+    let startTimestamp = 0;
+    let timerInterval = null;
+    let currentTestResult = null;
+    let testActive = false;
+
+    const referenceText = document.getElementById('referenceText').innerText;
+    document.getElementById('referenceOverlay').innerText = referenceText;
+
+    function acceptTerms() {
+        document.getElementById('termsScreen').style.display = 'none';
+        document.getElementById('mainMenu').style.display = 'block';
+    }
+
+    function declineTerms() {
+        alert('يجب الموافقة على الشروط لاستخدام التطبيق');
+    }
+
+    function showTest() {
+        document.getElementById('mainMenu').style.display = 'none';
+        document.getElementById('testArea').style.display = 'flex';
+        document.getElementById('resultPanel').style.display = 'none';
+        resetTest();
+    }
+
+    function showStats() {
+        document.getElementById('mainMenu').style.display = 'none';
+        document.getElementById('statsArea').style.display = 'flex';
+        loadStats();
+    }
+
+    function showContacts() {
+        document.getElementById('mainMenu').style.display = 'none';
+        document.getElementById('contactsArea').style.display = 'flex';
+        loadContacts();
+    }
+
+    function showSettings() {
+        document.getElementById('mainMenu').style.display = 'none';
+        document.getElementById('settingsArea').style.display = 'flex';
+        const darkMode = localStorage.getItem('darkmode') === 'true';
+        document.getElementById('darkModeToggle').checked = darkMode;
+    }
+
+    function updateStats() {
+        if (!testStarted) return;
+        const currentTime = (Date.now() - startTimestamp) / 1000;
+        const typed = document.getElementById('typingInput').value;
+        const refWords = referenceText.split(/\s+/);
+        const typedWords = typed.split(/\s+/);
+        
+        let correctWords = 0;
+        for (let i = 0; i < Math.min(refWords.length, typedWords.length); i++) {
+            if (refWords[i] === typedWords[i]) correctWords++;
+        }
+        const wpm = (correctWords / (currentTime / 60));
+        const accuracy = refWords.length > 0 ? (correctWords / refWords.length) * 100 : 0;
+        
+        document.getElementById('timerDisplay').innerText = currentTime.toFixed(1);
+        document.getElementById('wpmDisplay').innerText = Math.round(wpm);
+        document.getElementById('accuracyDisplay').innerText = Math.round(accuracy) + '%';
+    }
+
+    function startTest() {
+        if (testStarted) return;
+        testStarted = true;
+        startTimestamp = Date.now();
+        timerInterval = setInterval(updateStats, 100);
+        document.getElementById('typingInput').disabled = false;
+        document.getElementById('typingInput').focus();
+    }
+
+    function endTest() {
+        if (!testStarted) return;
+        testStarted = false;
+        if (timerInterval) clearInterval(timerInterval);
+        
+        const typed = document.getElementById('typingInput').value;
+        const refWords = referenceText.split(/\s+/);
+        const typedWords = typed.split(/\s+/);
+        
+        let correctWords = 0;
+        for (let i = 0; i < Math.min(refWords.length, typedWords.length); i++) {
+            if (refWords[i] === typedWords[i]) correctWords++;
+        }
+        const wrongWords = typedWords.length - correctWords;
+        const timeSpent = (Date.now() - startTimestamp) / 1000;
+        const wpm = (correctWords / (timeSpent / 60));
+        const accuracy = refWords.length > 0 ? (correctWords / refWords.length) * 100 : 0;
+        
+        currentTestResult = {
+            date: new Date().toISOString(),
+            wpm: Math.round(wpm),
+            time: timeSpent.toFixed(1),
+            accuracy: Math.round(accuracy),
+            correct: correctWords,
+            wrong: wrongWords,
+            total: refWords.length
+        };
+        
+        document.getElementById('finalWpm').innerText = currentTestResult.wpm;
+        document.getElementById('finalTime').innerText = currentTestResult.time;
+        document.getElementById('finalAccuracy').innerText = currentTestResult.accuracy + '%';
+        document.getElementById('finalCorrect').innerText = currentTestResult.correct;
+        document.getElementById('finalWrong').innerText = currentTestResult.wrong;
+        document.getElementById('resultPanel').style.display = 'block';
+        document.getElementById('typingInput').disabled = true;
+        
+        saveResult(currentTestResult);
+    }
+
+    function resetTest() {
+        if (timerInterval) clearInterval(timerInterval);
+        testStarted = false;
+        document.getElementById('typingInput').value = '';
+        document.getElementById('typingInput').disabled = false;
+        document.getElementById('resultPanel').style.display = 'none';
+        document.getElementById('timerDisplay').innerText = '0.0';
+        document.getElementById('wpmDisplay').innerText = '0';
+        document.getElementById('accuracyDisplay').innerText = '0%';
+        document.getElementById('typingInput').focus();
+    }
+
+    function saveResult(result) {
+        let results = JSON.parse(localStorage.getItem('klozr_stats') || '[]');
+        results.unshift(result);
+        if (results.length > 20) results.pop();
+        localStorage.setItem('klozr_stats', JSON.stringify(results));
+    }
+
+    function loadStats() {
+        let results = JSON.parse(localStorage.getItem('klozr_stats') || '[]');
+        const container = document.getElementById('statsList');
+        if (results.length === 0) {
+            container.innerHTML = '<div style="text-align:center;padding:20px;color:#555;">لا توجد إحصائيات سابقة</div>';
+            return;
+        }
+        container.innerHTML = '';
+        results.forEach((r, i) => {
+            const date = new Date(r.date).toLocaleString();
+            const div = document.createElement('div');
+            div.style.cssText = 'display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #1a1a1a;';
+            div.innerHTML = `
+                <div>${i+1}</div>
+                <div>${r.wpm} WPM</div>
+                <div>${r.accuracy}%</div>
+                <div>${r.time}s</div>
+                <div style="font-size:10px;color:#555;">${date}</div>
+            `;
+            container.appendChild(div);
+        });
+    }
+
+    function clearStats() {
+        if (confirm('مسح جميع الإحصائيات السابقة؟')) {
+            localStorage.removeItem('klozr_stats');
+            loadStats();
+        }
+    }
+
+    function loadContacts() {
+        let contacts = JSON.parse(localStorage.getItem('klozr_contacts') || '[]');
+        const container = document.getElementById('contactsList');
+        if (contacts.length === 0) {
+            container.innerHTML = '<div style="text-align:center;padding:20px;color:#555;">لا توجد جهات اتصال</div>';
+            return;
+        }
+        container.innerHTML = '';
+        contacts.forEach((c, i) => {
+            const div = document.createElement('div');
+            div.className = 'contact-card';
+            div.innerHTML = `
+                <div class="contact-info">
+                    <h3>${escapeHtml(c.name)}</h3>
+                    <p>${escapeHtml(c.info || '')}</p>
+                </div>
+                <button onclick="deleteContact(${i})" style="background:#1a1a1a;">حذف</button>
+            `;
+            container.appendChild(div);
+        });
+    }
+
+    function addContact() {
+        const name = document.getElementById('contactName').value.trim();
+        const info = document.getElementById('contactInfo').value.trim();
+        if (!name) {
+            alert('يرجى إدخال الاسم');
+            return;
+        }
+        let contacts = JSON.parse(localStorage.getItem('klozr_contacts') || '[]');
+        contacts.push({ name: name, info: info });
+        localStorage.setItem('klozr_contacts', JSON.stringify(contacts));
+        document.getElementById('contactName').value = '';
+        document.getElementById('contactInfo').value = '';
+        loadContacts();
+    }
+
+    function deleteContact(index) {
+        let contacts = JSON.parse(localStorage.getItem('klozr_contacts') || '[]');
+        contacts.splice(index, 1);
+        localStorage.setItem('klozr_contacts', JSON.stringify(contacts));
+        loadContacts();
+    }
+
+    function toggleDarkMode() {
+        const isDark = document.getElementById('darkModeToggle').checked;
+        localStorage.setItem('darkmode', isDark);
+        if (isDark) {
+            document.body.style.background = '#0a0a0a';
+            document.querySelector('.app').style.background = '#111';
+        } else {
+            document.body.style.background = '#e0e0e0';
+            document.querySelector('.app').style.background = '#f5f5f5';
+        }
+    }
+
+    function backToMenu() {
+        if (timerInterval) clearInterval(timerInterval);
+        document.getElementById('testArea').style.display = 'none';
+        document.getElementById('statsArea').style.display = 'none';
+        document.getElementById('contactsArea').style.display = 'none';
+        document.getElementById('settingsArea').style.display = 'none';
+        document.getElementById('mainMenu').style.display = 'block';
+        testStarted = false;
+    }
+
+    function escapeHtml(str) {
+        if (!str) return '';
+        return str.replace(/[&<>]/g, function(m) {
+            if (m === '&') return '&amp;';
+            if (m === '<') return '&lt;';
+            if (m === '>') return '&gt;';
+            return m;
+        });
+    }
+
+    const typingInput = document.getElementById('typingInput');
+    typingInput.addEventListener('input', function() {
+        if (!testStarted && typingInput.value.length > 0) {
+            startTest();
+        }
+        if (testStarted && typingInput.value.length >= referenceText.length) {
+            endTest();
+        }
+    });
+
+    const savedDarkMode = localStorage.getItem('darkmode') === 'true';
+    if (savedDarkMode) {
+        document.body.style.background = '#0a0a0a';
+        document.querySelector('.app').style.background = '#111';
+        if (document.getElementById('darkModeToggle')) 
+            document.getElementById('darkModeToggle').checked = true;
+    }
+</script>
+</body>
+      </html>
