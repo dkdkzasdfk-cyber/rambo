@@ -1,323 +1,980 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>KLOZR Keyboard</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            user-select: none;
-        }
-        body {
-            background: linear-gradient(135deg, #0a0f1a 0%, #0f1520 100%);
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 16px;
-        }
-        .app-container {
-            max-width: 500px;
-            width: 100%;
-            background: rgba(20, 25, 35, 0.95);
-            border-radius: 32px;
-            padding: 20px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
-            border: 1px solid rgba(68, 136, 255, 0.3);
-            backdrop-filter: blur(10px);
-        }
-        .logo {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        .logo h1 {
-            font-size: 48px;
-            font-weight: bold;
-            background: linear-gradient(45deg, #ffffff, #4488ff);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            text-shadow: 0 0 20px rgba(68,136,255,0.3);
-            letter-spacing: 4px;
-        }
-        .display-area {
-            background: #0a0e14;
-            border-radius: 20px;
-            padding: 16px;
-            min-height: 120px;
-            max-height: 200px;
-            overflow-y: auto;
-            margin-bottom: 15px;
-            border: 1px solid #2a3040;
-            color: #ffffff;
-            font-size: 16px;
-            line-height: 1.5;
-            font-family: monospace;
-            white-space: pre-wrap;
-            word-break: break-all;
-        }
-        .buttons {
-            display: flex;
-            gap: 12px;
-            margin-bottom: 20px;
-        }
-        .btn {
-            flex: 1;
-            padding: 12px;
-            border: none;
-            border-radius: 28px;
-            font-size: 18px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-        .btn-start {
-            background: linear-gradient(45deg, #2277ff, #4488ff);
-            color: white;
-            box-shadow: 0 4px 12px rgba(34,119,255,0.3);
-        }
-        .btn-start:active { transform: scale(0.97); }
-        .btn-stop {
-            background: linear-gradient(45deg, #ff3355, #ff5577);
-            color: white;
-            box-shadow: 0 4px 12px rgba(255,51,85,0.3);
-        }
-        .btn-stop:active { transform: scale(0.97); }
-        .section-title {
-            color: #88aaff;
-            font-size: 14px;
-            margin-bottom: 8px;
-            letter-spacing: 1px;
-        }
-        .add-sentence {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 15px;
-        }
-        .add-sentence input {
-            flex: 1;
-            padding: 10px 16px;
-            background: #0a0e14;
-            border: 1px solid #2a3040;
-            border-radius: 28px;
-            color: white;
-            font-size: 14px;
-        }
-        .add-sentence button {
-            background: #2a6f2a;
-            border: none;
-            border-radius: 28px;
-            padding: 0 20px;
-            color: white;
-            font-weight: bold;
-            cursor: pointer;
-        }
-        .sentence-list {
-            max-height: 250px;
-            overflow-y: auto;
-            background: #0a0e14;
-            border-radius: 16px;
-            padding: 8px;
-        }
-        .sentence-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: #11161f;
-            margin: 6px 0;
-            padding: 10px 12px;
-            border-radius: 12px;
-            border-left: 3px solid #4488ff;
-        }
-        .sentence-item span {
-            flex: 1;
-            color: #ddd;
-            font-size: 13px;
-            word-break: break-word;
-        }
-        .sentence-item button {
-            background: #5a2a2a;
-            border: none;
-            border-radius: 20px;
-            padding: 4px 12px;
-            color: white;
-            cursor: pointer;
-            margin-left: 8px;
-        }
-        .footer {
-            text-align: center;
-            margin-top: 20px;
-            font-size: 10px;
-            color: #446688;
-        }
-        ::-webkit-scrollbar {
-            width: 4px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #1a1f2a;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #4488ff;
-            border-radius: 4px;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Klozr</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Tajawal:wght@300;400;700;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0a0a0a;
+  --surface: #111;
+  --border: #222;
+  --text: #f0f0f0;
+  --muted: #555;
+  --accent: #fff;
+  --dim: #1a1a1a;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Tajawal', sans-serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+.screen { display: none; min-height: 100vh; }
+.screen.active { display: flex; flex-direction: column; }
+
+/* ── SPLASH ── */
+#splash {
+  align-items: center;
+  justify-content: center;
+  padding: 40px 24px;
+  background: #000;
+  position: relative;
+  overflow: hidden;
+}
+#splash::before {
+  content: '';
+  position: absolute;
+  top: -50%; left: -50%;
+  width: 200%; height: 200%;
+  background: radial-gradient(ellipse at center, #1a1a1a 0%, #000 60%);
+  animation: pulse 4s ease-in-out infinite;
+}
+@keyframes pulse { 0%,100%{opacity:.5} 50%{opacity:1} }
+.splash-inner { position: relative; text-align: center; max-width: 420px; }
+.logo-big {
+  font-family: 'Space Mono', monospace;
+  font-size: clamp(48px, 12vw, 80px);
+  font-weight: 700;
+  letter-spacing: -3px;
+  color: #fff;
+  margin-bottom: 8px;
+}
+.logo-tag { color: var(--muted); font-size: 13px; letter-spacing: 4px; text-transform: uppercase; margin-bottom: 40px; }
+.terms-box {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+  text-align: right;
+  margin-bottom: 24px;
+  max-height: 200px;
+  overflow-y: auto;
+  font-size: 13px;
+  line-height: 1.8;
+  color: #aaa;
+}
+.terms-box h4 { color: #fff; margin-bottom: 10px; font-size: 15px; }
+.agree-row { display: flex; align-items: center; gap: 12px; justify-content: flex-end; margin-bottom: 20px; font-size: 14px; cursor: pointer; }
+.agree-row input { width: 18px; height: 18px; accent-color: #fff; cursor: pointer; }
+.btn-main {
+  width: 100%;
+  padding: 14px;
+  background: #fff;
+  color: #000;
+  border: none;
+  border-radius: 8px;
+  font-family: 'Tajawal', sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: .2s;
+  opacity: .4;
+  pointer-events: none;
+}
+.btn-main.ready { opacity: 1; pointer-events: all; }
+.btn-main.ready:hover { background: #ddd; }
+
+/* ── TOPBAR ── */
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  background: var(--bg);
+  z-index: 10;
+}
+.logo-sm { font-family: 'Space Mono', monospace; font-size: 22px; letter-spacing: -1px; }
+.back-btn {
+  background: none;
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 6px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-family: 'Tajawal', sans-serif;
+  font-size: 13px;
+  transition: .2s;
+}
+.back-btn:hover { border-color: #fff; }
+
+/* ── HOME ── */
+#home { padding: 0 0 40px; }
+.home-hero {
+  padding: 32px 20px 24px;
+  border-bottom: 1px solid var(--border);
+}
+.greeting { font-size: 13px; color: var(--muted); margin-bottom: 4px; }
+.hero-title { font-size: 28px; font-weight: 900; }
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  padding: 20px;
+}
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 20px 16px;
+  cursor: pointer;
+  transition: .2s;
+  position: relative;
+  overflow: hidden;
+}
+.card:hover { border-color: #444; transform: translateY(-2px); }
+.card.full { grid-column: span 2; }
+.card-icon { font-size: 28px; margin-bottom: 10px; display: block; }
+.card-title { font-size: 15px; font-weight: 700; margin-bottom: 4px; }
+.card-desc { font-size: 12px; color: var(--muted); line-height: 1.5; }
+.card-badge {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  background: #fff;
+  color: #000;
+  font-size: 10px;
+  padding: 2px 7px;
+  border-radius: 20px;
+  font-weight: 700;
+}
+
+/* ── TYPING TEST ── */
+#typing { padding: 0; }
+.typing-wrap { padding: 20px; flex: 1; }
+.test-meta {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 16px;
+  font-size: 13px;
+  color: var(--muted);
+}
+.test-meta span { display: flex; align-items: center; gap: 5px; }
+.test-meta strong { color: var(--text); font-family: 'Space Mono', monospace; }
+.passage-select {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+.p-btn {
+  padding: 5px 12px;
+  border: 1px solid var(--border);
+  background: none;
+  color: var(--muted);
+  border-radius: 20px;
+  font-family: 'Tajawal', sans-serif;
+  font-size: 12px;
+  cursor: pointer;
+  transition: .2s;
+}
+.p-btn.active, .p-btn:hover { border-color: #fff; color: #fff; }
+.console-box {
+  background: var(--dim);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+  position: relative;
+  min-height: 160px;
+}
+.ghost-text {
+  font-family: 'Space Mono', monospace;
+  font-size: 15px;
+  line-height: 1.9;
+  color: var(--muted);
+  user-select: none;
+  word-break: break-word;
+  position: relative;
+  z-index: 1;
+}
+.ghost-text .correct { color: #fff; }
+.ghost-text .wrong { color: #ff4444; background: rgba(255,68,68,.15); border-radius: 2px; }
+.ghost-text .cursor-pos { border-right: 2px solid #fff; animation: blink .7s step-end infinite; }
+@keyframes blink { 50%{opacity:0} }
+.typing-input-real {
+  position: absolute;
+  opacity: 0;
+  width: 1px;
+  height: 1px;
+  z-index: -1;
+}
+.result-panel {
+  display: none;
+  margin-top: 16px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+  text-align: center;
+}
+.result-panel.show { display: block; }
+.wpm-big { font-family: 'Space Mono', monospace; font-size: 56px; font-weight: 700; line-height: 1; }
+.wpm-label { font-size: 12px; color: var(--muted); letter-spacing: 3px; text-transform: uppercase; margin-bottom: 16px; }
+.stats-row { display: flex; justify-content: center; gap: 24px; margin-bottom: 20px; }
+.stat { text-align: center; }
+.stat-val { font-family: 'Space Mono', monospace; font-size: 22px; font-weight: 700; }
+.stat-lbl { font-size: 11px; color: var(--muted); }
+.btn-retry {
+  padding: 10px 28px;
+  border: 1px solid var(--border);
+  background: none;
+  color: #fff;
+  border-radius: 8px;
+  cursor: pointer;
+  font-family: 'Tajawal', sans-serif;
+  font-size: 14px;
+  margin: 4px;
+  transition: .2s;
+}
+.btn-retry:hover { background: #fff; color: #000; }
+
+/* ── ROOMS ── */
+#rooms { padding: 0; }
+.rooms-list { padding: 16px 20px; flex: 1; }
+.rooms-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+.rooms-title { font-size: 18px; font-weight: 700; }
+.btn-add {
+  padding: 8px 16px;
+  background: #fff;
+  color: #000;
+  border: none;
+  border-radius: 8px;
+  font-family: 'Tajawal', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: .2s;
+}
+.btn-add:hover { background: #ddd; }
+.room-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 10px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  transition: .2s;
+}
+.room-card:hover { border-color: #555; }
+.room-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--dim);
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+.room-avatar img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+.room-info { flex: 1; }
+.room-name { font-weight: 700; font-size: 15px; }
+.room-sub { font-size: 12px; color: var(--muted); margin-top: 2px; }
+.room-arrow { color: var(--muted); font-size: 18px; }
+
+/* ── ROOM DETAIL ── */
+#room-detail { padding: 0; }
+.room-detail-wrap { padding: 16px 20px; flex: 1; }
+.room-hero {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 20px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--border);
+}
+.room-hero-avatar {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: var(--dim);
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+  cursor: pointer;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.room-hero-avatar img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+.room-hero-info h2 { font-size: 20px; font-weight: 900; }
+.room-hero-info p { font-size: 12px; color: var(--muted); margin-top: 4px; }
+.room-notes-label { font-size: 12px; color: var(--muted); margin-bottom: 8px; letter-spacing: 2px; text-transform: uppercase; }
+.room-notes {
+  width: 100%;
+  background: var(--dim);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px;
+  color: var(--text);
+  font-family: 'Tajawal', sans-serif;
+  font-size: 14px;
+  line-height: 1.7;
+  resize: none;
+  min-height: 100px;
+  margin-bottom: 16px;
+}
+.room-notes:focus { outline: none; border-color: #555; }
+.photos-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 16px; }
+.photo-slot {
+  aspect-ratio: 1;
+  background: var(--dim);
+  border: 1px dashed var(--border);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  cursor: pointer;
+  overflow: hidden;
+  transition: .2s;
+}
+.photo-slot:hover { border-color: #555; }
+.photo-slot img { width: 100%; height: 100%; object-fit: cover; border-radius: 7px; }
+.save-note-btn {
+  width: 100%;
+  padding: 12px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--text);
+  border-radius: 8px;
+  font-family: 'Tajawal', sans-serif;
+  font-size: 14px;
+  cursor: pointer;
+  transition: .2s;
+}
+.save-note-btn:hover { background: #fff; color: #000; }
+
+/* ── MODAL ── */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.85);
+  z-index: 100;
+  align-items: flex-end;
+  justify-content: center;
+}
+.modal-overlay.open { display: flex; }
+.modal {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 20px 20px 0 0;
+  padding: 24px;
+  width: 100%;
+  max-width: 480px;
+  animation: slideUp .25s ease;
+}
+@keyframes slideUp { from{transform:translateY(40px);opacity:0} to{transform:translateY(0);opacity:1} }
+.modal h3 { font-size: 18px; font-weight: 700; margin-bottom: 16px; }
+.modal input, .modal textarea {
+  width: 100%;
+  background: var(--dim);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px;
+  color: var(--text);
+  font-family: 'Tajawal', sans-serif;
+  font-size: 14px;
+  margin-bottom: 12px;
+}
+.modal input:focus, .modal textarea:focus { outline: none; border-color: #555; }
+.modal-actions { display: flex; gap: 10px; }
+.modal-actions button {
+  flex: 1;
+  padding: 12px;
+  border-radius: 8px;
+  font-family: 'Tajawal', sans-serif;
+  font-size: 14px;
+  cursor: pointer;
+  border: 1px solid var(--border);
+  transition: .2s;
+}
+.modal-actions .confirm { background: #fff; color: #000; border-color: #fff; }
+.modal-actions .cancel { background: none; color: var(--text); }
+
+/* ── NOTES ── */
+#notes { padding: 0; }
+.notes-wrap { padding: 16px 20px; flex: 1; }
+.quick-note {
+  width: 100%;
+  background: var(--dim);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px;
+  color: var(--text);
+  font-family: 'Tajawal', sans-serif;
+  font-size: 15px;
+  line-height: 1.8;
+  resize: none;
+  min-height: 140px;
+  margin-bottom: 12px;
+}
+.quick-note:focus { outline: none; border-color: #555; }
+.notes-saved { margin-top: 16px; }
+.note-item {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px;
+  margin-bottom: 8px;
+  font-size: 13px;
+  line-height: 1.6;
+  position: relative;
+}
+.note-item .del-note {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background: none;
+  border: none;
+  color: var(--muted);
+  cursor: pointer;
+  font-size: 16px;
+}
+.note-time { font-size: 11px; color: var(--muted); margin-top: 6px; }
+
+/* ── SETTINGS ── */
+#settings { padding: 0; }
+.settings-wrap { padding: 16px 20px; }
+.setting-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--border);
+}
+.setting-label { font-size: 15px; }
+.setting-sub { font-size: 12px; color: var(--muted); margin-top: 2px; }
+.toggle {
+  width: 44px;
+  height: 24px;
+  background: var(--border);
+  border-radius: 20px;
+  cursor: pointer;
+  position: relative;
+  transition: .3s;
+}
+.toggle.on { background: #fff; }
+.toggle::after {
+  content: '';
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  background: #000;
+  border-radius: 50%;
+  top: 3px;
+  right: 3px;
+  transition: .3s;
+}
+.toggle.on::after { right: 23px; }
+
+/* scrollbar */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+</style>
 </head>
 <body>
-<div class="app-container">
-    <div class="logo">
-        <h1>KLOZR</h1>
-    </div>
 
-    <div class="display-area" id="displayArea">
-        <!-- النص المكتوب يظهر هنا -->
+<!-- SPLASH -->
+<div class="screen active" id="splash">
+  <div class="splash-inner">
+    <div class="logo-big">Klozr</div>
+    <div class="logo-tag">Your personal workspace</div>
+    <div class="terms-box">
+      <h4>الشروط والأحكام</h4>
+      تطبيق Klozr هو أداة شخصية لتحسين سرعة الكتابة وإدارة المعلومات الشخصية. باستخدامك للتطبيق، فإنك توافق على الشروط التالية:<br><br>
+      ١. جميع البيانات تُحفظ محلياً على جهازك فقط.<br>
+      ٢. لا يتم مشاركة أي معلومات شخصية مع أي طرف ثالث.<br>
+      ٣. أنت مسؤول عن المحتوى الذي تضيفه للتطبيق.<br>
+      ٤. Klozr غير مسؤول عن أي فقدان للبيانات.<br>
+      ٥. يحق للمطور تحديث هذه الشروط في أي وقت.
     </div>
+    <label class="agree-row">
+      <span>أوافق على الشروط والأحكام</span>
+      <input type="checkbox" id="agree-check">
+    </label>
+    <button class="btn-main" id="enter-btn" onclick="goHome()">ابدأ الآن</button>
+  </div>
+</div>
 
-    <div class="buttons">
-        <button class="btn btn-start" id="startBtn">▶ START</button>
-        <button class="btn btn-stop" id="stopBtn">⏹ STOP</button>
+<!-- HOME -->
+<div class="screen" id="home">
+  <div class="topbar">
+    <div class="logo-sm">Klozr</div>
+    <button class="back-btn" onclick="goScreen('settings')">⚙ إعدادات</button>
+  </div>
+  <div class="home-hero">
+    <div class="greeting">مرحباً بك</div>
+    <div class="hero-title">ماذا تريد اليوم؟</div>
+  </div>
+  <div class="grid">
+    <div class="card" onclick="goScreen('typing')">
+      <span class="card-icon">⌨️</span>
+      <div class="card-title">اختبار السرعة</div>
+      <div class="card-desc">قِس سرعة كتابتك بنصوص متنوعة</div>
     </div>
-
-    <div class="section-title">📝 إضافة جملة جديدة</div>
-    <div class="add-sentence">
-        <input type="text" id="newSentence" placeholder="اكتب جملة ثم اضف...">
-        <button id="addBtn">➕</button>
+    <div class="card" onclick="goScreen('rooms')">
+      <span class="card-icon">🗂️</span>
+      <div class="card-title">غرف الأشخاص</div>
+      <div class="card-desc">احفظ معلومات أشخاصك المهمين</div>
     </div>
-
-    <div class="section-title">📋 قائمة الجمل (سيتم كتابتها تلقائياً)</div>
-    <div class="sentence-list" id="sentenceList"></div>
-
-    <div class="footer">
-        © 2024 KLOZR | by .7ki. | @Fenix
+    <div class="card" onclick="goScreen('notes')">
+      <span class="card-icon">📝</span>
+      <div class="card-title">ملاحظات سريعة</div>
+      <div class="card-desc">دوّن أفكارك بسرعة</div>
     </div>
+    <div class="card" onclick="goScreen('settings')">
+      <span class="card-icon">⚙️</span>
+      <div class="card-title">الإعدادات</div>
+      <div class="card-desc">تخصيص التطبيق</div>
+    </div>
+    <div class="card full" style="background:linear-gradient(135deg,#1a1a1a,#111);border-color:#333;">
+      <div class="card-badge">PRO TIP</div>
+      <span class="card-icon">🏆</span>
+      <div class="card-title">أفضل سرعة محققة</div>
+      <div class="card-desc" id="best-wpm-home">لم تُجرِ أي اختبار بعد</div>
+    </div>
+  </div>
+</div>
+
+<!-- TYPING TEST -->
+<div class="screen" id="typing">
+  <div class="topbar">
+    <div class="logo-sm">السرعة</div>
+    <button class="back-btn" onclick="goScreen('home')">← رجوع</button>
+  </div>
+  <div class="typing-wrap">
+    <div class="test-meta">
+      <span>⏱ <strong id="timer-display">00:00</strong></span>
+      <span>📝 <strong id="wpm-live">0</strong> WPM</span>
+      <span>✅ <strong id="acc-live">100</strong>%</span>
+    </div>
+    <div class="passage-select">
+      <button class="p-btn active" onclick="selectPassage(0,this)">مقال أكاديمي</button>
+      <button class="p-btn" onclick="selectPassage(1,this)">اقتباسات</button>
+      <button class="p-btn" onclick="selectPassage(2,this)">تقني</button>
+      <button class="p-btn" onclick="selectPassage(3,this)">أدبي</button>
+      <button class="p-btn" onclick="selectPassage(4,this)">عشوائي</button>
+    </div>
+    <div class="console-box" onclick="focusInput()">
+      <div class="ghost-text" id="ghost"></div>
+      <input type="text" class="typing-input-real" id="typing-input" oninput="handleTyping(this.value)" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+    </div>
+    <div class="result-panel" id="result-panel">
+      <div class="wpm-big" id="wpm-result">--</div>
+      <div class="wpm-label">كلمة في الدقيقة</div>
+      <div class="stats-row">
+        <div class="stat"><div class="stat-val" id="acc-result">--%</div><div class="stat-lbl">دقة</div></div>
+        <div class="stat"><div class="stat-val" id="time-result">--s</div><div class="stat-lbl">وقت</div></div>
+        <div class="stat"><div class="stat-val" id="chars-result">--</div><div class="stat-lbl">حرف</div></div>
+      </div>
+      <button class="btn-retry" onclick="resetTest()">🔄 إعادة المحاولة</button>
+      <button class="btn-retry" onclick="selectNextPassage()">⏭ نص جديد</button>
+    </div>
+  </div>
+</div>
+
+<!-- ROOMS LIST -->
+<div class="screen" id="rooms">
+  <div class="topbar">
+    <div class="logo-sm">الغرف</div>
+    <button class="back-btn" onclick="goScreen('home')">← رجوع</button>
+  </div>
+  <div class="rooms-list">
+    <div class="rooms-header">
+      <div class="rooms-title">أشخاصك المهمون</div>
+      <button class="btn-add" onclick="openNewRoomModal()">+ غرفة جديدة</button>
+    </div>
+    <div id="rooms-container"></div>
+  </div>
+</div>
+
+<!-- ROOM DETAIL -->
+<div class="screen" id="room-detail">
+  <div class="topbar">
+    <div class="logo-sm" id="detail-name-top">غرفة</div>
+    <button class="back-btn" onclick="goScreen('rooms')">← رجوع</button>
+  </div>
+  <div class="room-detail-wrap">
+    <div class="room-hero">
+      <div class="room-hero-avatar" id="detail-avatar" onclick="changeRoomAvatar()">😊</div>
+      <div class="room-hero-info">
+        <h2 id="detail-room-name">—</h2>
+        <p id="detail-room-sub">اضغط الصورة لتغييرها</p>
+      </div>
+    </div>
+    <input type="file" id="avatar-upload" accept="image/*" style="display:none" onchange="handleAvatarUpload(event)">
+    <div class="room-notes-label">ملاحظاتك</div>
+    <textarea class="room-notes" id="detail-notes" placeholder="اكتب هنا أي شيء عن هذا الشخص..." rows="4"></textarea>
+    <div class="room-notes-label" style="margin-top:8px">صور</div>
+    <div class="photos-grid" id="photos-grid"></div>
+    <input type="file" id="photo-upload" accept="image/*" style="display:none" onchange="handlePhotoUpload(event)">
+    <button class="save-note-btn" onclick="saveRoomDetail()">💾 حفظ</button>
+  </div>
+</div>
+
+<!-- NOTES -->
+<div class="screen" id="notes">
+  <div class="topbar">
+    <div class="logo-sm">ملاحظات</div>
+    <button class="back-btn" onclick="goScreen('home')">← رجوع</button>
+  </div>
+  <div class="notes-wrap">
+    <textarea class="quick-note" id="quick-note-input" placeholder="اكتب أي شيء..."></textarea>
+    <button class="btn-add" style="width:100%;margin-bottom:16px" onclick="saveQuickNote()">+ حفظ الملاحظة</button>
+    <div id="notes-list"></div>
+  </div>
+</div>
+
+<!-- SETTINGS -->
+<div class="screen" id="settings">
+  <div class="topbar">
+    <div class="logo-sm">الإعدادات</div>
+    <button class="back-btn" onclick="goScreen('home')">← رجوع</button>
+  </div>
+  <div class="settings-wrap">
+    <div class="setting-row">
+      <div><div class="setting-label">الوضع الفاتح</div><div class="setting-sub">تغيير لون الخلفية</div></div>
+      <div class="toggle" id="theme-toggle" onclick="toggleTheme()"></div>
+    </div>
+    <div class="setting-row">
+      <div><div class="setting-label">صوت الكتابة</div><div class="setting-sub">صوت عند كل حرف</div></div>
+      <div class="toggle" id="sound-toggle" onclick="toggleSetting('sound')"></div>
+    </div>
+    <div class="setting-row">
+      <div><div class="setting-label">أفضل سرعة</div><div class="setting-sub">WPM</div></div>
+      <div style="font-family:'Space Mono',monospace;font-size:20px;font-weight:700" id="best-wpm-settings">--</div>
+    </div>
+    <div class="setting-row">
+      <div><div class="setting-label">مسح كل البيانات</div><div class="setting-sub">لا يمكن التراجع</div></div>
+      <button class="btn-retry" style="padding:7px 14px;font-size:13px" onclick="clearAll()">مسح</button>
+    </div>
+    <div style="padding-top:32px;text-align:center;color:var(--muted);font-size:12px">
+      Klozr v1.0 · صُنع بـ ♥
+    </div>
+  </div>
+</div>
+
+<!-- NEW ROOM MODAL -->
+<div class="modal-overlay" id="new-room-modal">
+  <div class="modal">
+    <h3>غرفة جديدة</h3>
+    <input type="text" id="new-room-name" placeholder="اسم الشخص">
+    <input type="text" id="new-room-sub" placeholder="ملاحظة قصيرة (اختياري)">
+    <div class="modal-actions">
+      <button class="cancel" onclick="closeModal('new-room-modal')">إلغاء</button>
+      <button class="confirm" onclick="createRoom()">إنشاء</button>
+    </div>
+  </div>
 </div>
 
 <script>
-    // تحميل الجمل من التخزين المحلي
-    let sentences = [];
+// ── STATE ──
+let state = JSON.parse(localStorage.getItem('klozr') || '{}');
+state.rooms = state.rooms || [];
+state.notes = state.notes || [];
+state.settings = state.settings || { theme: 'dark', sound: false };
+state.bestWpm = state.bestWpm || 0;
 
-    function loadSentences() {
-        const saved = localStorage.getItem('klozr_sentences');
-        if (saved) {
-            sentences = JSON.parse(saved);
-        }
-        if (sentences.length === 0) {
-            sentences = [
-                "مرحباً بك في تطبيق KLOZR",
-                "هذا كيبورد يكتب تلقائياً",
-                "يمكنك إضافة جمل جديدة",
-                "استمتع بالتجربة"
-            ];
-        }
-        renderSentenceList();
-    }
+let currentRoom = null;
+let currentPhotoSlot = null;
 
-    function saveSentences() {
-        localStorage.setItem('klozr_sentences', JSON.stringify(sentences));
-        renderSentenceList();
-    }
+// ── PASSAGES ──
+const passages = [
+  "الاستاذ الدكتور محمد لبنان قدم محاضرة رائعة في قاعة الجامعة وناقش فيها أحدث الابحاث العلمية في مجال الفيزياء الفلكية وكان الطلاب مندهشين من عمق المعلومات التي قدمها الأستاذ الكبير",
+  "الكتابة السريعة مهارة يمكن تطويرها مع التمرين المستمر وكلما كتبت أكثر كلما زادت سرعتك وتحسنت دقتك وأصبح الأمر عادة طبيعية لا تستغرق منك أي جهد يذكر",
+  "البرمجة هي لغة العصر الحديث وتعلمها يفتح أمامك أبواباً واسعة في سوق العمل التقني وكل مطور ناجح بدأ بكتابة أول سطر كود وتعلم من أخطائه حتى وصل لمستواه الحالي",
+  "في ليلة مقمرة جلس الشاعر على شرفته ينظر للنجوم ويفكر في معنى الوجود وكتب قصيدة تصف جمال الكون وصغر الإنسان أمام هذا الكون الواسع اللانهائي العظيم",
+  "المنافسة الحقيقية ليست مع الآخرين بل مع نفسك أنت وكل يوم تمر فيه دون تطوير نفسك هو يوم ضائع لذا ابدأ من الآن وحدد أهدافك وسر نحوها خطوة بخطوة"
+];
+let currentPassageIdx = 0;
+let typedChars = 0;
+let totalChars = 0;
+let wrongChars = 0;
+let timerInterval = null;
+let startTime = null;
+let testRunning = false;
+let testDone = false;
 
-    function renderSentenceList() {
-        const container = document.getElementById('sentenceList');
-        container.innerHTML = '';
-        sentences.forEach((sentence, index) => {
-            const div = document.createElement('div');
-            div.className = 'sentence-item';
-            const span = document.createElement('span');
-            span.innerText = sentence.length > 50 ? sentence.slice(0, 50) + '...' : sentence;
-            const delBtn = document.createElement('button');
-            delBtn.innerText = 'X';
-            delBtn.onclick = () => {
-                sentences.splice(index, 1);
-                saveSentences();
-                if (typingInterval) stopTyping();
-            };
-            div.appendChild(span);
-            div.appendChild(delBtn);
-            container.appendChild(div);
-        });
-    }
+// ── SAVE ──
+function save() { localStorage.setItem('klozr', JSON.stringify(state)); }
 
-    // إضافة جملة جديدة
-    document.getElementById('addBtn').onclick = () => {
-        const input = document.getElementById('newSentence');
-        const text = input.value.trim();
-        if (text) {
-            sentences.push(text);
-            saveSentences();
-            input.value = '';
-        }
-    };
+// ── SCREENS ──
+function goScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  if (id === 'rooms') renderRooms();
+  if (id === 'typing') { resetTest(); setTimeout(focusInput, 300); }
+  if (id === 'notes') renderNotes();
+  if (id === 'settings') renderSettings();
+  if (id === 'home') renderHome();
+}
 
-    // منطقة العرض
-    const displayArea = document.getElementById('displayArea');
-    let typingInterval = null;
-    let currentSentenceIndex = 0;
-    let currentCharIndex = 0;
-    let currentText = '';
-    let isTyping = false;
+// ── SPLASH ──
+document.getElementById('agree-check').addEventListener('change', function() {
+  const btn = document.getElementById('enter-btn');
+  btn.classList.toggle('ready', this.checked);
+});
+function goHome() {
+  if (!document.getElementById('agree-check').checked) return;
+  goScreen('home');
+}
 
-    function updateDisplay() {
-        displayArea.innerText = currentText;
-        displayArea.scrollTop = displayArea.scrollHeight;
-    }
+// ── HOME ──
+function renderHome() {
+  const el = document.getElementById('best-wpm-home');
+  if (state.bestWpm > 0) el.textContent = `🏆 ${state.bestWpm} كلمة / دقيقة`;
+  else el.textContent = 'لم تُجرِ أي اختبار بعد — جرّب اختبار السرعة!';
+}
 
-    function typeNextChar() {
-        if (!isTyping) return;
-        if (sentences.length === 0) {
-            stopTyping();
-            return;
-        }
-        if (currentSentenceIndex >= sentences.length) {
-            // نعيد من البداية
-            currentSentenceIndex = 0;
-            currentCharIndex = 0;
-            currentText = '';
-        }
+// ── TYPING TEST ──
+function selectPassage(idx, btn) {
+  document.querySelectorAll('.p-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  currentPassageIdx = idx;
+  resetTest();
+}
+function selectNextPassage() {
+  currentPassageIdx = (currentPassageIdx + 1) % passages.length;
+  document.querySelectorAll('.p-btn').forEach((b,i) => b.classList.toggle('active', i === currentPassageIdx));
+  resetTest();
+}
+function renderGhost() {
+  const passage = passages[currentPassageIdx];
+  const ghost = document.getElementById('ghost');
+  let html = '';
+  for (let i = 0; i < passage.length; i++) {
+    let cls = '';
+    if (i < typedChars) cls = 'correct';
+    if (wrongChars > 0 && i >= typedChars && i < typedChars + 1) cls = 'wrong';
+    if (i === typedChars) cls += ' cursor-pos';
+    html += `<span class="${cls.trim()}">${passage[i] === ' ' ? '&nbsp;' : passage[i]}</span>`;
+  }
+  ghost.innerHTML = html;
+}
+function handleTyping(val) {
+  const passage = passages[currentPassageIdx];
+  if (testDone) return;
+  if (!testRunning && val.length > 0) {
+    testRunning = true;
+    startTime = Date.now();
+    timerInterval = setInterval(updateTimer, 500);
+  }
+  typedChars = 0; wrongChars = 0;
+  for (let i = 0; i < val.length && i < passage.length; i++) {
+    if (val[i] === passage[i]) typedChars++;
+    else { wrongChars++; break; }
+  }
+  if (wrongChars === 0) typedChars = Math.min(val.length, passage.length);
+  const elapsed = (Date.now() - startTime) / 60000 || 0.001;
+  const words = typedChars / 5;
+  const wpm = Math.round(words / elapsed);
+  document.getElementById('wpm-live').textContent = wpm;
+  const acc = val.length > 0 ? Math.round((typedChars / val.length) * 100) : 100;
+  document.getElementById('acc-live').textContent = acc;
+  renderGhost();
+  if (typedChars >= passage.length) finishTest();
+}
+function updateTimer() {
+  if (!startTime) return;
+  const s = Math.floor((Date.now() - startTime) / 1000);
+  const m = Math.floor(s / 60).toString().padStart(2,'0');
+  const sec = (s % 60).toString().padStart(2,'0');
+  document.getElementById('timer-display').textContent = `${m}:${sec}`;
+}
+function finishTest() {
+  clearInterval(timerInterval);
+  testDone = true;
+  const elapsed = (Date.now() - startTime) / 1000;
+  const wpm = Math.round((typedChars / 5) / (elapsed / 60));
+  const acc = parseInt(document.getElementById('acc-live').textContent);
+  document.getElementById('wpm-result').textContent = wpm;
+  document.getElementById('acc-result').textContent = acc + '%';
+  document.getElementById('time-result').textContent = Math.round(elapsed) + 's';
+  document.getElementById('chars-result').textContent = typedChars;
+  document.getElementById('result-panel').classList.add('show');
+  if (wpm > (state.bestWpm || 0)) { state.bestWpm = wpm; save(); }
+}
+function resetTest() {
+  clearInterval(timerInterval);
+  testRunning = false; testDone = false;
+  typedChars = 0; wrongChars = 0;
+  startTime = null;
+  document.getElementById('timer-display').textContent = '00:00';
+  document.getElementById('wpm-live').textContent = '0';
+  document.getElementById('acc-live').textContent = '100';
+  document.getElementById('typing-input').value = '';
+  document.getElementById('result-panel').classList.remove('show');
+  renderGhost();
+}
+function focusInput() { document.getElementById('typing-input').focus(); }
 
-        const sentence = sentences[currentSentenceIndex];
-        if (currentCharIndex < sentence.length) {
-            currentText += sentence[currentCharIndex];
-            updateDisplay();
-            currentCharIndex++;
-        } else {
-            // ننتقل إلى الجملة التالية
-            currentText += '\n';
-            updateDisplay();
-            currentSentenceIndex++;
-            currentCharIndex = 0;
-        }
-    }
+// ── ROOMS ──
+function renderRooms() {
+  const c = document.getElementById('rooms-container');
+  if (state.rooms.length === 0) {
+    c.innerHTML = '<div style="text-align:center;padding:40px;color:var(--muted)">لا توجد غرف بعد<br>أضف شخصاً مهماً الآن</div>';
+    return;
+  }
+  c.innerHTML = state.rooms.map((r,i) => `
+    <div class="room-card" onclick="openRoom(${i})">
+      <div class="room-avatar">${r.avatar && r.avatar.startsWith('data') ? `<img src="${r.avatar}">` : (r.avatar || '😊')}</div>
+      <div class="room-info">
+        <div class="room-name">${r.name}</div>
+        <div class="room-sub">${r.sub || 'اضغط للعرض'}</div>
+      </div>
+      <div class="room-arrow">›</div>
+    </div>
+  `).join('');
+}
+function openNewRoomModal() { document.getElementById('new-room-modal').classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+function createRoom() {
+  const name = document.getElementById('new-room-name').value.trim();
+  if (!name) return;
+  state.rooms.push({ name, sub: document.getElementById('new-room-sub').value.trim(), notes: '', avatar: '😊', photos: [] });
+  save(); closeModal('new-room-modal');
+  document.getElementById('new-room-name').value = '';
+  document.getElementById('new-room-sub').value = '';
+  renderRooms();
+}
+function openRoom(idx) {
+  currentRoom = idx;
+  const r = state.rooms[idx];
+  document.getElementById('detail-name-top').textContent = r.name;
+  document.getElementById('detail-room-name').textContent = r.name;
+  document.getElementById('detail-room-sub').textContent = r.sub || 'لا توجد ملاحظة';
+  document.getElementById('detail-notes').value = r.notes || '';
+  const av = document.getElementById('detail-avatar');
+  av.innerHTML = r.avatar && r.avatar.startsWith('data') ? `<img src="${r.avatar}">` : (r.avatar || '😊');
+  renderPhotos(r.photos || []);
+  goScreen('room-detail');
+}
+function renderPhotos(photos) {
+  const grid = document.getElementById('photos-grid');
+  let html = photos.map((p,i) => `<div class="photo-slot"><img src="${p}"></div>`).join('');
+  if (photos.length < 6) html += `<div class="photo-slot" onclick="addPhoto()">+</div>`;
+  grid.innerHTML = html;
+}
+function addPhoto() { document.getElementById('photo-upload').click(); }
+function handlePhotoUpload(e) {
+  const file = e.target.files[0]; if (!file) return;
+  const r = new FileReader();
+  r.onload = ev => {
+    state.rooms[currentRoom].photos = state.rooms[currentRoom].photos || [];
+    state.rooms[currentRoom].photos.push(ev.target.result);
+    save(); renderPhotos(state.rooms[currentRoom].photos);
+  };
+  r.readAsDataURL(file);
+}
+function changeRoomAvatar() { document.getElementById('avatar-upload').click(); }
+function handleAvatarUpload(e) {
+  const file = e.target.files[0]; if (!file) return;
+  const r = new FileReader();
+  r.onload = ev => {
+    state.rooms[currentRoom].avatar = ev.target.result;
+    const av = document.getElementById('detail-avatar');
+    av.innerHTML = `<img src="${ev.target.result}">`;
+    save();
+  };
+  r.readAsDataURL(file);
+}
+function saveRoomDetail() {
+  state.rooms[currentRoom].notes = document.getElementById('detail-notes').value;
+  save();
+  const btn = document.querySelector('#room-detail .save-note-btn');
+  btn.textContent = '✅ تم الحفظ';
+  setTimeout(() => btn.textContent = '💾 حفظ', 1500);
+}
 
-    function startTyping() {
-        if (sentences.length === 0) {
-            displayArea.innerText = '⚠️ أضف جمل أولاً';
-            return;
-        }
-        if (typingInterval) clearInterval(typingInterval);
-        isTyping = true;
-        currentSentenceIndex = 0;
-        currentCharIndex = 0;
-        currentText = '';
-        updateDisplay();
-        typingInterval = setInterval(typeNextChar, 0.1); // 0.1ms بين كل حرف (بسرعة عالية)
-    }
+// ── QUICK NOTES ──
+function saveQuickNote() {
+  const val = document.getElementById('quick-note-input').value.trim();
+  if (!val) return;
+  state.notes.unshift({ text: val, time: new Date().toLocaleString('ar-SA') });
+  save();
+  document.getElementById('quick-note-input').value = '';
+  renderNotes();
+}
+function deleteNote(idx) {
+  state.notes.splice(idx, 1); save(); renderNotes();
+}
+function renderNotes() {
+  const c = document.getElementById('notes-list');
+  if (state.notes.length === 0) { c.innerHTML = '<div style="text-align:center;padding:20px;color:var(--muted)">لا توجد ملاحظات بعد</div>'; return; }
+  c.innerHTML = state.notes.map((n,i) => `
+    <div class="note-item">
+      <button class="del-note" onclick="deleteNote(${i})">✕</button>
+      ${n.text}
+      <div class="note-time">${n.time}</div>
+    </div>
+  `).join('');
+}
 
-    function stopTyping() {
-        isTyping = false;
-        if (typingInterval) {
-            clearInterval(typingInterval);
-            typingInterval = null;
-        }
-    }
+// ── SETTINGS ──
+function renderSettings() {
+  document.getElementById('best-wpm-settings').textContent = state.bestWpm || '--';
+  document.getElementById('theme-toggle').classList.toggle('on', state.settings.theme === 'light');
+  document.getElementById('sound-toggle').classList.toggle('on', state.settings.sound);
+}
+function toggleTheme() {
+  state.settings.theme = state.settings.theme === 'dark' ? 'light' : 'dark';
+  applyTheme(); save(); renderSettings();
+}
+function applyTheme() {
+  if (state.settings.theme === 'light') {
+    document.documentElement.style.setProperty('--bg','#f5f5f5');
+    document.documentElement.style.setProperty('--surface','#fff');
+    document.documentElement.style.setProperty('--border','#ddd');
+    document.documentElement.style.setProperty('--text','#111');
+    document.documentElement.style.setProperty('--muted','#888');
+    document.documentElement.style.setProperty('--dim','#ececec');
+  } else {
+    document.documentElement.style.setProperty('--bg','#0a0a0a');
+    document.documentElement.style.setProperty('--surface','#111');
+    document.documentElement.style.setProperty('--border','#222');
+    document.documentElement.style.setProperty('--text','#f0f0f0');
+    document.documentElement.style.setProperty('--muted','#555');
+    document.documentElement.style.setProperty('--dim','#1a1a1a');
+  }
+}
+function toggleSetting(key) {
+  state.settings[key] = !state.settings[key]; save(); renderSettings();
+}
+function clearAll() {
+  if (confirm('هل أنت متأكد؟ سيتم مسح كل البيانات')) {
+    localStorage.removeItem('klozr');
+    location.reload();
+  }
+}
 
-    document.getElementById('startBtn').onclick = startTyping;
-    document.getElementById('stopBtn').onclick = stopTyping;
-
-    loadSentences();
+// ── INIT ──
+applyTheme();
 </script>
 </body>
 </html>
